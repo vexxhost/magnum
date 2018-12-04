@@ -114,7 +114,8 @@ class TestClusterConductorWithK8s(base.TestCase):
                        'kubescheduler_options': '--kubescheduler',
                        'kubeproxy_options': '--kubeproxy',
                        'influx_grafana_dashboard_enabled': 'True',
-                       'service_cluster_ip_range': '10.254.0.0/16'},
+                       'service_cluster_ip_range': '10.254.0.0/16',
+                       'boot_volume_size': '60'},
             'master_flavor_id': 'master_flavor_id',
             'flavor_id': 'flavor_id',
             'project_id': 'project_id',
@@ -172,6 +173,10 @@ class TestClusterConductorWithK8s(base.TestCase):
         self.mock_enable_octavia = octavia_patcher.start()
         self.mock_enable_octavia.return_value = False
         self.addCleanup(octavia_patcher.stop)
+        CONF.set_override('default_boot_volume_type',
+                          'lvmdriver-1', group='cinder')
+        CONF.set_override('default_etcd_volume_type',
+                          'lvmdriver-1', group='cinder')
 
     @patch('requests.get')
     @patch('magnum.objects.ClusterTemplate.get_by_uuid')
@@ -259,6 +264,8 @@ class TestClusterConductorWithK8s(base.TestCase):
                        'kube_dashboard_enabled': 'True',
                        'influx_grafana_dashboard_enabled': 'True',
                        'docker_volume_type': 'lvmdriver-1',
+                       'boot_volume_type': 'lvmdriver-1',
+                       'etcd_volume_type': 'lvmdriver-1',
                        'etcd_volume_size': None,
                        'availability_zone': 'az_1',
                        'cert_manager_api': 'False',
@@ -345,7 +352,10 @@ class TestClusterConductorWithK8s(base.TestCase):
             'max_node_count': 2,
             'master_image': 'image_id',
             'minion_image': 'image_id',
-            'keystone_auth_default_policy': self.keystone_auth_default_policy
+            'keystone_auth_default_policy': self.keystone_auth_default_policy,
+            'boot_volume_size': '60',
+            'boot_volume_type': 'lvmdriver-1',
+            'etcd_volume_type': 'lvmdriver-1'
         }
         if missing_attr is not None:
             expected.pop(mapping[missing_attr], None)
@@ -484,7 +494,10 @@ class TestClusterConductorWithK8s(base.TestCase):
             'max_node_count': 2,
             'master_image': 'image_id',
             'minion_image': 'image_id',
-            'keystone_auth_default_policy': self.keystone_auth_default_policy
+            'keystone_auth_default_policy': self.keystone_auth_default_policy,
+            'boot_volume_size': '60',
+            'boot_volume_type': 'lvmdriver-1',
+            'etcd_volume_type': 'lvmdriver-1'
         }
 
         self.assertEqual(expected, definition)
@@ -603,7 +616,10 @@ class TestClusterConductorWithK8s(base.TestCase):
             'max_node_count': 2,
             'master_image': None,
             'minion_image': None,
-            'keystone_auth_default_policy': self.keystone_auth_default_policy
+            'keystone_auth_default_policy': self.keystone_auth_default_policy,
+            'boot_volume_size': '60',
+            'boot_volume_type': 'lvmdriver-1',
+            'etcd_volume_type': 'lvmdriver-1'
         }
         self.assertEqual(expected, definition)
         self.assertEqual(
@@ -1033,7 +1049,10 @@ class TestClusterConductorWithK8s(base.TestCase):
             'max_node_count': 2,
             'master_image': 'image_id',
             'minion_image': 'image_id',
-            'keystone_auth_default_policy': self.keystone_auth_default_policy
+            'keystone_auth_default_policy': self.keystone_auth_default_policy,
+            'boot_volume_size': '60',
+            'boot_volume_type': 'lvmdriver-1',
+            'etcd_volume_type': 'lvmdriver-1'
         }
         self.assertEqual(expected, definition)
         self.assertEqual(

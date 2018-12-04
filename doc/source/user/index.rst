@@ -344,8 +344,14 @@ the table are linked to more details elsewhere in the user guide.
 +---------------------------------------+--------------------+---------------+
 | `docker_volume_type`_                 | see below          | see below     |
 +---------------------------------------+--------------------+---------------+
+| `boot_volume_size`_                   | see below          | see below     |
++---------------------------------------+--------------------+---------------+
+| `boot_volume_type`_                   | see below          | see below     |
++---------------------------------------+--------------------+---------------+
 | `etcd_volume_size`_                   | etcd storage       | 0             |
 |                                       | volume size        |               |
++---------------------------------------+--------------------+---------------+
+| `etcd_volume_type`_                   | see below          | see below     |
 +---------------------------------------+--------------------+---------------+
 | `container_infra_prefix`_             | see below          | ""            |
 +---------------------------------------+--------------------+---------------+
@@ -1107,8 +1113,24 @@ _`admission_control_list`
   The default value corresponds to the one recommended in this doc
   for our current Kubernetes version.
 
+_`boot_volume_size`
+  This label sets the size of a boot volume for instances, this is useful if
+  your flavors are boot from volume only.  The default value is 20, setting
+  by config option default_boot_volume_size
+
+_`boot_volume_type`
+  This label sets the volume type of a boot volume for instances, this is
+  useful if your flavors are boot from volume only.  The default value is 0,
+  meaning that no volume will be created on boot. If it's not setting by
+  config option default_boot_volume_type, then Magnum will random select
+  one from the list of Cinder volume types.
+
 _`etcd_volume_size`
   This label sets the size of a volume holding the etcd storage data.
+  The default value is 0, meaning the etcd data is not persisted (no volume).
+
+_`etcd_volume_type`
+  This label sets the volume type of a volume holding the etcd storage data.
   The default value is 0, meaning the etcd data is not persisted (no volume).
 
 _`container_infra_prefix`
