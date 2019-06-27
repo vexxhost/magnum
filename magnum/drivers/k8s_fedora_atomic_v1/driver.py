@@ -87,8 +87,6 @@ class Driver(driver.HeatDriver):
         # kube_tag changed
         heat_params["kube_tag"] = cluster_template.labels["kube_tag"]
         heat_params["kube_version"] = cluster_template.labels["kube_tag"]
-        heat_params["master_kube_tag"] = cluster_template.labels["kube_tag"]
-        heat_params["minion_kube_tag"] = cluster_template.labels["kube_tag"]
         heat_params["update_max_batch_size"] = max_batch_size
         # Rules: 1. No downgrade 2. Explicitly override 3. Merging based on set
         # Update heat_params based on the data generated above

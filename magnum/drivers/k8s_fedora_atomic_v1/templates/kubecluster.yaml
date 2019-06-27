@@ -355,16 +355,6 @@ parameters:
     description: tag of the k8s containers used to provision the kubernetes cluster
     default: v1.14.3
 
-  master_kube_tag:
-    type: string
-    description: tag of the k8s containers used to provision the kubernetes cluster
-    default: v1.14.3
-
-  minion_kube_tag:
-    type: string
-    description: tag of the k8s containers used to provision the kubernetes cluster
-    default: v1.14.3
-
   # FIXME update cloud_provider_tag when a fix for PVC is released
   # https://github.com/kubernetes/cloud-provider-openstack/pull/405
   cloud_provider_tag:
@@ -902,7 +892,7 @@ resources:
           http_proxy: {get_param: http_proxy}
           https_proxy: {get_param: https_proxy}
           no_proxy: {get_param: no_proxy}
-          kube_tag: {get_param: master_kube_tag}
+          kube_tag: {get_param: kube_tag}
           cloud_provider_tag: {get_param: cloud_provider_tag}
           cloud_provider_enabled: {get_param: cloud_provider_enabled}
           kube_version: {get_param: kube_version}
@@ -1074,7 +1064,7 @@ resources:
           http_proxy: {get_param: http_proxy}
           https_proxy: {get_param: https_proxy}
           no_proxy: {get_param: no_proxy}
-          kube_tag: {get_param: minion_kube_tag}
+          kube_tag: {get_param: kube_tag}
           kube_version: {get_param: kube_version}
           trustee_user_id: {get_param: trustee_user_id}
           trustee_username: {get_param: trustee_username}
