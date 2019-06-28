@@ -5,6 +5,22 @@
 set -x
 
 if [ "$NETWORK_DRIVER" = "flannel" ]; then
+    # NOTE(mnaser): Add systemd unit to set iptables to FORWARD.
+    #               This is critical to make communication functional.
+    cat << EOF > /etc/systemd/system/flannel-iptables-forward-accept.service
+[Unit]
+After=docker.service
+Requires=network.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/iptables -P FORWARD ACCEPT
+ExecStartPost=/usr/sbin/iptables -S
+
+[Install]
+WantedBy=kubelet.service
+EOF
+
     _prefix=${CONTAINER_INFRA_PREFIX:-quay.io/coreos/}
     FLANNEL_DEPLOY=/srv/magnum/kubernetes/manifests/flannel-deploy.yaml
 
