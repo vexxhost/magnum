@@ -2,7 +2,7 @@ name: release
 
 on:
   push:
-    tags: ['*\+a8e.*']
+    tags: ['*a8e.*']
 
 permissions:
   contents: read
