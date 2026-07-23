@@ -3,7 +3,7 @@ name: ci
 on:
   pull_request:
   push:
-    branches: ["master", "stable/**"]
+    branches: ["main", "stable/**"]
 
 permissions:
   contents: read
@@ -47,5 +47,5 @@ jobs:
         uses: vexxhost/atmosphere-tools/actions/tox@refs/heads/v1
         with:
           environment: ${{ matrix.environment }}
-          extra-tox-override: ";testenv.deps+=setuptools<81"
+          extra-tox-override: ""
           python-version: ${{ matrix.python-version }}
