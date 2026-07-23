@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: ["master", "stable/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: depot-ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Build Python package
+        uses: vexxhost/atmosphere-tools/actions/python-build@refs/heads/v1
+        with:
+          branch: ${{ github.base_ref || github.ref_name }}
+          python-version: "3.10"
+          upstream-url: https://github.com/openstack/${{ github.event.repository.name }}.git
+
+  tox:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - environment: pep8
+            python-version: "3.10"
+            runner: depot-ubuntu-latest
+          - environment: py3
+            python-version: "3.8"
+            runner: depot-ubuntu-latest
+          - environment: py3
+            python-version: "3.9"
+            runner: depot-ubuntu-latest
+          - environment: py3
+            python-version: "3.10"
+            runner: depot-ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Run "tox"
+        uses: vexxhost/atmosphere-tools/actions/tox@refs/heads/v1
+        with:
+          environment: ${{ matrix.environment }}
+          extra-tox-override: ";testenv.deps+=setuptools<81"
+          python-version: ${{ matrix.python-version }}
