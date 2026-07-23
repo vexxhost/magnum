@@ -3,7 +3,7 @@ name: ci
 on:
   pull_request:
   push:
-    branches: ["master", "stable/**"]
+    branches: ["main", "stable/**"]
 
 permissions:
   contents: read
@@ -20,7 +20,7 @@ jobs:
       - name: Build Python package
         uses: vexxhost/atmosphere-tools/actions/python-build@refs/heads/v1
         with:
-          branch: ${{ (github.base_ref || github.ref_name) == 'master' && 'main' || (github.base_ref || github.ref_name) }}
+          branch: ${{ github.base_ref || github.ref_name }}
           python-version: "3.13"
           upstream-url: https://github.com/openstack/${{ github.event.repository.name }}.git
 
