@@ -1,0 +1,31 @@
+name: release
+
+on:
+  push:
+    tags: ['*\+a8e.*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: python-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: depot-ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Publish Python package
+        uses: vexxhost/atmosphere-tools/actions/python-release@refs/heads/v1
+        with:
+          python-version: "3.13"
+          version: ${{ github.ref_name }}
+          check-url: ${{ vars.UV_INDEX_URL }}
+          publish-url: ${{ vars.UV_PUBLISH_URL }}
+          username: ${{ secrets.UV_PUBLISH_USERNAME }}
+          password: ${{ secrets.UV_PUBLISH_PASSWORD }}
